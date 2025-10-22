@@ -1,16 +1,29 @@
 import React, { useState } from "react";
 
-function Login({ goToSignup, goToForgetPassword }) {
+function Login({ goToSignup, goToForgetPassword, goToHome }) {   // 👈 Added goToHome
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    // Simple validation
     if (!email.trim()) return setMessage("Please enter your email");
     if (!password.trim()) return setMessage("Please enter your password");
-    setMessage("Login successful!");
-    console.log({ email, password });
+
+    // Dummy check (you can replace this with your real logic)
+    if (email === "admin@gmail.com" && password === "123456") {
+      setMessage("Login successful!");
+      console.log({ email, password });
+
+      // 👇 Navigate to Home page
+      setTimeout(() => {
+        goToHome();
+      }, 800);
+    } else {
+      setMessage("Invalid email or password");
+    }
   };
 
   return (
