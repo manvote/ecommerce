@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgetPassword from "./pages/ForgetPassword";
-import Home from "./pages/home";
+import Login from "./Login";
+import Signup from "./Signup";
+import ForgetPassword from "./ForgetPassword";
 import AdminLogin from "./admin";
 
 function App() {
   const [page, setPage] = useState("login"); 
-  // possible values: "login" | "signup" | "forget" | "home" | "admin"
+  // possible values: "login" | "signup" | "forget" | "admin"
 
   const handleSignup = (userData) => {
     console.log("New user signed up:", userData);
@@ -18,7 +17,6 @@ function App() {
   const goToLogin = () => setPage("login");
   const goToSignup = () => setPage("signup");
   const goToForgetPassword = () => setPage("forget");
-  const goToHome = () => setPage("home");
   const goToAdminLogin = () => setPage("admin");
   const goToUserLogin = () => setPage("login");
 
@@ -28,7 +26,6 @@ function App() {
         <Login
           goToSignup={goToSignup}
           goToForgetPassword={goToForgetPassword}
-          goToHome={goToHome}
         />
       )}
 
@@ -38,11 +35,9 @@ function App() {
 
       {page === "forget" && <ForgetPassword goToLogin={goToLogin} />}
 
-      {page === "home" && <Home />}
-
       {page === "admin" && <AdminLogin goToUserLogin={goToUserLogin} />}
 
-      {/* Admin login shortcut button visible on every page except admin */}
+      {/* Admin login shortcut button visible on every page */}
       {page !== "admin" && (
         <button onClick={goToAdminLogin} style={styles.adminButton}>
           Admin Login
