@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
-import Products from "./pages/products";
-import Orders from "./pages/orders";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Products from "./pages/adminproducts";
+import Orders from "./pages/adminorders";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgetPassword from "./pages/ForgetPassword";
-import Home from "./pages/home";
 import AdminLogin from "./pages/admin";
 
 function App() {
   // ---- Admin module state (persist to localStorage) ----
   const [products, setProducts] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("products") || "[]");
+      return JSON.parse(localStorage.getItem("adminproducts") || "[]");
     } catch {
       return [];
     }
@@ -20,18 +19,18 @@ function App() {
 
   const [orders, setOrders] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("orders") || "[]");
+      return JSON.parse(localStorage.getItem("adminorders") || "[]");
     } catch {
       return [];
     }
   });
 
   useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("adminproducts", JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("adminorders", JSON.stringify(orders));
   }, [orders]);
 
   // ---- Auth state ----
@@ -40,8 +39,7 @@ function App() {
 
   return (
     <Router>
-        <div >
-       
+      <div>
         <Routes>
           {/* Public/Auth Routes */}
           <Route path="/" element={<Login goToSignup={() => setIsUserLoggedIn(false)} />} />
@@ -51,26 +49,20 @@ function App() {
 
           {/* Publicly accessible routes */}
           <Route
-            path="/products"
+            path="/adminproducts"
             element={<Products products={products} setProducts={setProducts} />}
           />
           <Route
-            path="/orders"
+            path="/adminorders"
             element={<Orders orders={orders} setOrders={setOrders} products={products} />}
           />
 
           {/* Fallback redirect */}
-          <Route path="*" element={<Navigate to="/products" replace />} />
+          <Route path="*" element={<Navigate to="/adminproducts" replace />} />
         </Routes>
-
-        {/* Navigation bar */}
-        
       </div>
     </Router>
   );
-
-
-
-};
+}
 
 export default App;

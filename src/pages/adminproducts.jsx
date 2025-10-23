@@ -5,12 +5,12 @@ const Products = ({ products, setProducts }) => {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    const storedProducts = JSON.parse(localStorage.getItem("products") || "[]");
+    const storedProducts = JSON.parse(localStorage.getItem("adminproducts") || "[]");
     if (storedProducts) setProducts(storedProducts);
   }, [setProducts]);
 
   useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("adminproducts", JSON.stringify(products));
   }, [products]);
 
   useEffect(() => setEditing(!!form.id), [form]);
@@ -173,8 +173,8 @@ const Products = ({ products, setProducts }) => {
 
       {/* Navigation */}
       <div className="top-nav">
-        <a href="/products">Products</a>
-        <a href="/orders">Orders</a>
+        <a href="/adminproducts">Products</a>
+        <a href="/adminorders">Orders</a>
       </div>
 
       {/* Page Title */}

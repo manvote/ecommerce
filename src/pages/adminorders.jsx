@@ -12,12 +12,12 @@ const Orders = ({ orders, setOrders }) => {
   });
 
   useEffect(() => {
-    const storedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+    const storedOrders = JSON.parse(localStorage.getItem("adminorders") || "[]");
     if (storedOrders) setOrders(storedOrders);
   }, [setOrders]);
 
   useEffect(() => {
-    localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("adminorders", JSON.stringify(orders));
   }, [orders]);
 
   const handleFilterChange = (e, column) => {
@@ -139,8 +139,8 @@ const Orders = ({ orders, setOrders }) => {
 
       {/* Navigation */}
       <div className="top-nav">
-        <a href="/products">Products</a>
-        <a href="/orders">Orders</a>
+        <a href="/adminproducts">Products</a>
+        <a href="/adminorders">Orders</a>
       </div>
 
       {/* Title */}
