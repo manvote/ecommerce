@@ -1,79 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
+import Products from "./pages/products";
+import Orders from "./pages/orders";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgetPassword from "./pages/ForgetPassword";
 import Home from "./pages/home";
-import AdminLogin from "./admin";
+import AdminLogin from "./pages/admin";
 
 function App() {
-  const [page, setPage] = useState("login"); 
-  // possible values: "login" | "signup" | "forget" | "home" | "admin"
+  // ---- Admin module state (persist to localStorage) ----
+  const [products, setProducts] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("products") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
-  const handleSignup = (userData) => {
-    console.log("New user signed up:", userData);
-    setPage("login");
-  };
+  const [orders, setOrders] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("orders") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
-  // Navigation functions
-  const goToLogin = () => setPage("login");
-  const goToSignup = () => setPage("signup");
-  const goToForgetPassword = () => setPage("forget");
-  const goToHome = () => setPage("home");
-  const goToAdminLogin = () => setPage("admin");
-  const goToUserLogin = () => setPage("login");
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
+
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
+
+  // ---- Auth state ----
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   return (
-    <div style={styles.container}>
-      {page === "login" && (
-        <Login
-          goToSignup={goToSignup}
-          goToForgetPassword={goToForgetPassword}
-          goToHome={goToHome}
-        />
-      )}
+    <Router>
+        <div >
+       
+        <Routes>
+          {/* Public/Auth Routes */}
+          <Route path="/" element={<Login goToSignup={() => setIsUserLoggedIn(false)} />} />
+          <Route path="/signup" element={<Signup onSignup={() => setIsUserLoggedIn(true)} />} />
+          <Route path="/forget" element={<ForgetPassword />} />
+          <Route path="/admin-login" element={<AdminLogin goToUserLogin={() => setIsAdmin(false)} />} />
 
-      {page === "signup" && (
-        <Signup onSignup={handleSignup} goToLogin={goToLogin} />
-      )}
+          {/* Publicly accessible routes */}
+          <Route
+            path="/products"
+            element={<Products products={products} setProducts={setProducts} />}
+          />
+          <Route
+            path="/orders"
+            element={<Orders orders={orders} setOrders={setOrders} products={products} />}
+          />
 
-      {page === "forget" && <ForgetPassword goToLogin={goToLogin} />}
+          {/* Fallback redirect */}
+          <Route path="*" element={<Navigate to="/products" replace />} />
+        </Routes>
 
-      {page === "home" && <Home />}
-
-      {page === "admin" && <AdminLogin goToUserLogin={goToUserLogin} />}
-
-      {/* Admin login shortcut button visible on every page except admin */}
-      {page !== "admin" && (
-        <button onClick={goToAdminLogin} style={styles.adminButton}>
-          Admin Login
-        </button>
-      )}
-    </div>
+        {/* Navigation bar */}
+        
+      </div>
+    </Router>
   );
-}
 
-const styles = {
-  container: {
-    backgroundColor: "#f3f4f6",
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "Arial, sans-serif",
-    position: "relative",
-  },
-  adminButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    padding: "8px 12px",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "14px",
-  },
+
+
 };
 
 export default App;
