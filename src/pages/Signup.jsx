@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Signup = ({ goToLogin, onSignup }) => {
+const Signup = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,12 +47,11 @@ const Signup = ({ goToLogin, onSignup }) => {
     if (!otpVerified) return alert("Please verify your OTP first");
     if (password !== confirmPassword) return alert("Passwords do not match");
     alert(`Signup successful! Welcome, ${username}`);
-    onSignup && onSignup({ username, email, password });
+    navigate("/");
   };
 
   return (
     <div style={styles.page}>
-      {/* 🌈 Gradient Header */}
       <div style={styles.header}>
         <h1 style={styles.logo}>MyStore</h1>
       </div>
@@ -123,7 +124,11 @@ const Signup = ({ goToLogin, onSignup }) => {
 
           <p style={styles.bottomText}>
             Already have an account?{" "}
-            <button onClick={goToLogin} style={styles.linkButton}>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              style={styles.linkButton}
+            >
               Login
             </button>
           </p>
@@ -134,7 +139,7 @@ const Signup = ({ goToLogin, onSignup }) => {
 };
 
 const styles = {
-  // 🎨 Theme
+   // 🎨 Theme
   page: {
     "--accent-1": "#1976d2",
     "--accent-2": "#42a5f5",
@@ -239,6 +244,7 @@ const styles = {
     padding:0,
     fontSize: "13px",
   },
-};
+
+ };
 
 export default Signup;
