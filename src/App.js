@@ -1,45 +1,41 @@
+
 import React, { useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgetPassword from "./pages/ForgetPassword";
 import AdminLogin from "./pages/admin";
-import Home from "./pages/home";
+import Products from "./pages/adminproducts";
+import Orders from "./pages/adminorders";
+import Home from "./pages/home"; // <-- Home.jsx file
 
 function App() {
-  const [page, setPage] = useState("login");
-
-  // Navigation Handlers
-  const goToSignup = () => setPage("signup");
-  const goToLogin = () => setPage("login");
-  const goToForgetPassword = () => setPage("forgetPassword");
-  const goToAdminLogin = () => setPage("adminLogin");
-  const goToUserLogin = () => setPage("login");
-  const goToHome = () => setPage("home");
+  const [page, setPage] = useState("login"); // current page
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   return (
     <div>
       {page === "login" && (
         <Login
-          goToSignup={goToSignup}
-          goToForgetPassword={goToForgetPassword}
-          goToHome={goToHome}
-          goToAdminLogin={goToAdminLogin}
+          goToSignup={() => setPage("signup")}
+          goToForgetPassword={() => setPage("forget")}
+          goToHome={() => setPage("home")}  // Login button goes to Home.jsx
+          goToAdminLogin={() => setPage("admin")}
         />
       )}
-
-      {page === "signup" && (
-        <Signup goToLogin={goToLogin} onSignup={() => setPage("login")} />
+      {page === "signup" && <Signup goToLogin={() => setPage("login")} />}
+      {page === "forget" && <ForgetPassword goToLogin={() => setPage("login")} />}
+      {page === "home" && (
+        <Home
+          goToAdmin={() => setPage("admin")}
+          goToProducts={() => setPage("products")}
+          goToOrders={() => setPage("orders")}
+          goToLogin={() => setPage("login")}
+        />
       )}
-
-      {page === "forgetPassword" && (
-        <ForgetPassword goToLogin={goToLogin} />
-      )}
-
-      {page === "adminLogin" && (
-        <AdminLogin goToUserLogin={goToUserLogin} />
-      )}
-
-      {page === "home" && <Home goToLogin={goToLogin} />}
+      {page === "admin" && <AdminLogin goToUserLogin={() => setPage("login")} />}
+      {page === "products" && <Products products={products} setProducts={setProducts} />}
+      {page === "orders" && <Orders orders={orders} setOrders={setOrders} />}
     </div>
   );
 }
