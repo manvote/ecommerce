@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
+function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -13,7 +15,7 @@ function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
 
     if (email === "admin@gmail.com" && password === "123456") {
       setMessage("Login successful!");
-      setTimeout(() => goToHome(), 800);
+      setTimeout(() => navigate("/home"), 800);
     } else {
       setMessage("Invalid email or password");
     }
@@ -21,17 +23,13 @@ function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
 
   return (
     <div style={styles.page}>
-      {/* 🌈 Gradient Header */}
       <div style={styles.header}>
         <h1 style={styles.logo}>MyStore</h1>
-
-        {/* 🧭 Admin Login Button */}
-        <button style={styles.adminButton} onClick={goToAdminLogin}>
+        <button style={styles.adminButton} onClick={() => navigate("/admin")}>
           Admin Login
         </button>
       </div>
 
-      {/* 💳 Login Card */}
       <div style={styles.container}>
         <form onSubmit={handleLogin} style={styles.form}>
           <h2 style={styles.heading}>Welcome Back 👋</h2>
@@ -60,7 +58,7 @@ function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
             <button
               type="button"
               style={styles.linkButton}
-              onClick={goToForgetPassword}
+              onClick={() => navigate("/forgot")}
             >
               Forgot Password?
             </button>
@@ -69,7 +67,7 @@ function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
               <button
                 type="button"
                 style={styles.linkButton}
-                onClick={goToSignup}
+                onClick={() => navigate("/signup")}
               >
                 Sign Up
               </button>
@@ -83,8 +81,9 @@ function Login({ goToSignup, goToForgetPassword, goToHome, goToAdminLogin }) {
   );
 }
 
-const styles = {
-  // 🎨 Theme Colors
+// (Keep your same styles)
+const styles = { 
+   // 🎨 Theme Colors
   page: {
     "--accent-1": "#1976d2",
     "--accent-2": "#42a5f5",
@@ -204,6 +203,7 @@ const styles = {
     marginTop: "5px",
     fontSize: "13px",
   },
-};
+
+ };
 
 export default Login;
