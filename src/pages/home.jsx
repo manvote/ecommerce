@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserAlt, FaShoppingCart, FaChevronLeft, FaChevronRight, FaHome } from "react-icons/fa";
-
+import { useCart } from "./CartContext"; 
+import { FaHeart } from "react-icons/fa";
 // 🎨 Import banners
 import banner1 from "../assets/banners/banner1.png";
 import banner2 from "../assets/banners/banner2.png";
@@ -52,6 +53,7 @@ import puzzle from "../assets/products/toys/puzzle.jpg";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const categories = ["Electronics", "Fashion", "Beauty", "Appliances", "Furniture", "Toys"];
 
   const products = [
@@ -101,6 +103,7 @@ const Home = () => {
 
   const offers = [banner1, banner2, banner3];
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [showDropdown, setShowDropdown] = useState(false);
   const scrollRefs = useRef({});
 
   useEffect(() => {
@@ -110,7 +113,10 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [offers.length]);
 
-  const handleAddToCart = (product) => alert(`${product.name} added to cart 🛒`);
+  const handleAddToCart = (product) =>{
+  addToCart({ ...product, quantity: 1 }); // add product to global cart
+  alert(`${product.name} added to cart 🛒`);
+};
 
 
   const scroll = (category, direction) => {
@@ -210,12 +216,117 @@ addToCart: {
           <button style={styles.searchButton}>Search</button>
         </div>
         <div style={styles.userCart}>
-          <span><FaUserAlt /> Account</span>
-          <span><FaShoppingCart /> Cart</span>
-          <span onClick={() => navigate("/home")} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}>
-            <FaHome /> Home
-          </span>
+ 
+{/* ===== Navbar ===== */}
+<div style={styles.navbar}>
+  <div style={styles.logo}>MyShop</div>
+
+  <div style={styles.searchWrapper}>
+    <input type="text" placeholder="Search products..." style={styles.searchInput} />
+    <button style={styles.searchButton}>Search</button>
+  </div>
+
+  <div style={styles.userCart}>
+    {/* Account Dropdown */}
+    <div style={{ position: "relative" }}>
+      <span
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "5px",
+        }}
+        onClick={() => setShowDropdown((prev) => !prev)}
+      >
+        <FaUserAlt /> Account ▾
+      </span>
+
+      {showDropdown && (
+        <div
+          style={{
+            position: "absolute",
+            top: "35px",
+            right: 0,
+            background: "#fff",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+            borderRadius: "6px",
+            overflow: "hidden",
+            minWidth: "150px",
+            zIndex: 2000,
+          }}
+        >
+          <div
+            style={{
+              padding: "10px 15px",
+              cursor: "pointer",
+              borderBottom: "1px solid #eee",
+              color: "#333",
+            }}
+            onClick={() => {
+              navigate("/OrderHistory");
+              setShowDropdown(false);
+            }}
+          >
+            Order History
+          </div>
+          <div
+      style={{
+        padding: "10px 15px",
+        cursor: "pointer",
+        borderBottom: "1px solid #eee",
+        color: "#333",
+        display: "flex",
+        alignItems: "center",
+        gap: "5px",
+      }}
+      onClick={() => {
+        navigate("/wishlist"); // your wishlist route
+        setShowDropdown(false);
+      }}
+    >
+      <FaHeart /> Wishlist
+     </div>
+          <div
+            style={{
+              padding: "10px 15px",
+              cursor: "pointer",
+              color: "#333",
+            }}
+            onClick={() => {
+              navigate("/profile");
+              setShowDropdown(false);
+            }}
+          >
+            Profile
+          </div>
         </div>
+      )}
+    </div>
+
+    {/* Cart */}
+    <span
+      style={{ cursor: "pointer" }}
+      onClick={() => navigate("/cart")}
+    >
+      <FaShoppingCart /> Cart
+    </span>
+
+    {/* Home */}
+    <span
+      onClick={() => navigate("/home")}
+      style={{
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: "5px",
+      }}
+    >
+      <FaHome /> Home
+    </span>
+  </div>
+</div>
+
+</div>
       </div>
 
       {/* Banner */}
