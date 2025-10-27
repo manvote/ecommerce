@@ -14,8 +14,11 @@ function Login() {
     if (!password.trim()) return setMessage("Please enter your password");
 
     if (email === "admin@gmail.com" && password === "123456") {
-      setMessage("Login successful!");
-      setTimeout(() => navigate("/home"), 800);
+  const loggedUser = { email, name: "Admin", role: "admin" }; // example user object
+  localStorage.setItem("user", JSON.stringify(loggedUser)); // save to localStorage
+  setMessage("Login successful!");
+  setTimeout(() => navigate("/home"), 800);
+
     } else {
       setMessage("Invalid email or password");
     }
